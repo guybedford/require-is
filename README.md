@@ -1,7 +1,7 @@
 Require-IS
 ===
 
-A conditional loading plugin for [Require-JS](http://requirejs.org/) that works with builds.
+A conditional loading plugin for [Require-JS](http://requirejs.org/) that works with optimizer builds.
 
 Installation
 ---
