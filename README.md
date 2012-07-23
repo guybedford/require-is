@@ -75,9 +75,10 @@ require(['is'], function(is) {
 
 Any further loads will then use the condition.
 
-**3. As a conditional checking module:**
+**3. Most importantly, as a conditional checking module, located at featureId:**
 
-In 'iphone.js':
+Eg:
+**In 'iphone.js':**
 ```javascript
 define(function() {
   if (typeof navigator === 'undefined' || typeof navigator.userAgent === 'undefined')
