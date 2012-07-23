@@ -87,7 +87,7 @@ define(function() {
 });
 ```
 
-**The condition will be checked in the above order. If no module returning either 'true' or 'false' at featureId is found, an error will be thrown.**
+**The condition will be checked in the above order. If none of the above return either 'true' or 'false', an error will be thrown.**
 
 **Note that conditions are constants. They can only be set once. As soon as a condition has been used in the loading of a module, it cannot be changed again and any attempts to set it will throw an error.**
 
