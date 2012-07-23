@@ -130,7 +130,7 @@ will either get excluded or included as needed.
 
 ###Separate build layers
 
-To separate, say, all the ie code into its own build layer, provide the following build configuration:
+To separate, say, all the mobile code into its own build layer, provide the following build configuration:
 
 ```javascript
 config: {
