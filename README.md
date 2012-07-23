@@ -151,5 +151,5 @@ modules: [
 ]
 ```
 
-In this way, all the separate `is!mobile?mobile-script` requires can be compiled into a single 'mobile' layer that when loaded
+In this way, all the separate `is!mobile?mobile-script` requires called by all the previous modules, can be compiled into a single 'mobile' layer that when loaded
 results in no need to separately load the mobile modules from many resources.
