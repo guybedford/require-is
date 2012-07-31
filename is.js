@@ -89,7 +89,7 @@ define(['module', 'require'], function(module, require) {
   is.lookup = function(feature, config, complete) {
     if (config.isBuild) {
       if (is.features[feature] === undefined)
-        console.log('Feature ' + feature + ' not specified for build! All features must be manually enabled or disabled in the config for the build.');
+        is.features[feature] = true;
       
       //add the feature to the build, if not excluded in config
       if ((config.isExcludeDetection || []).indexOf(feature) == -1)
