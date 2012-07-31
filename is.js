@@ -86,7 +86,16 @@ define(['module', 'require'], function(module, require) {
   is.used = {};
   is.deps = {};
   
-  is.lookup = function(feature, complete) {
+  is.lookup = function(feature, config, complete) {
+    if (config.isBuild) {
+      if (is.features[feature] === undefined)
+        console.log('Feature ' + feature + ' not specified for build! All features must be manually enabled or disabled in the config for the build.');
+      
+      //add the feature to the build, if not excluded in config
+      if ((config.isExcludeDetection || []).indexOf(feature) == -1)
+        require([feature], function(){});
+    }
+    
     if (is.features[feature] !== undefined) {
       complete(is.features[feature]);
       return;
@@ -150,6 +159,7 @@ define(['module', 'require'], function(module, require) {
   is.normalize = function(name, normalize) {
     var f = is.deconstruct(name);
     f.feature = normalize(f.feature);
+
     if (f.moduleId)
       f.moduleId = normalize(f.moduleId);
     
@@ -168,13 +178,13 @@ define(['module', 'require'], function(module, require) {
   }
   
   is.set = function(feature) {
-    if (is.used[feature])
+    if (is.used[feature] && is.features[feature] != true)
       throw 'is: Feature ' + feature + ' has already been used, can\'t change!';
     is.features[feature] = true;
   }
   
   is.unset = function(feature) {
-    if (is.used[feature])
+    if (is.used[feature] && is.features[feature] == true)
       throw 'is: Feature ' + feature + ' has already been used, can\'t change!';
     is.features[feature] = false;
   }
@@ -183,7 +193,7 @@ define(['module', 'require'], function(module, require) {
     var f = is.deconstruct(name);
     
     if (f.type == 'check') {
-      is.lookup(f.feature, load);
+      is.lookup(f.feature, config.isBuild, load);
       return;
     }
     
@@ -195,7 +205,7 @@ define(['module', 'require'], function(module, require) {
       }
       
       //check feature
-      is.lookup(f.feature, function(_feature) {
+      is.lookup(f.feature, config, function(_feature) {
         if ((_feature && f.type == 'load_if') || (!_feature && f.type == 'load_if_not'))
           req([f.moduleId], load);
         else
