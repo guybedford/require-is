@@ -216,11 +216,11 @@ define(['module', 'require'], function(module, require) {
       is.lookup(f.feature, config.isBuild, function(_feature) {
         
         if (config.isBuild) {
-          if (config.isExclude && config.isExclude.indexOf(f.feature) != -1) {
+          if (_feature === false || (config.isExclude && config.isExclude.indexOf(f.feature) != -1)) {
             load(null);
             return;
           }
-          //by default, build the module in
+          //by default, build the module in, unless excluded by the config
           req([f.moduleId], load);
           return;
         }
