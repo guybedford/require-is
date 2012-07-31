@@ -84,22 +84,30 @@ define(['module', 'require'], function(module, require) {
       throw 'Feature ' + f + ' must be true or false in config.';
   
   is.used = {};
-  is.deps = {};
   
-  is.lookup = function(feature, config, complete) {
-    if (config.isBuild) {
-      if (is.features[feature] === undefined)
-        is.features[feature] = true;
-      
-      //add the feature to the build, if not excluded in config
-      if ((config.isExcludeDetection || []).indexOf(feature) == -1)
-        require([feature], function(){});
-    }
+  //build tracking
+  is.deps = {};
+  is.writeFeatures = {};
+  
+  is.lookup = function(feature, isBuild, complete) {
     
     if (is.features[feature] !== undefined) {
+      
+      if (isBuild)
+        //ensure we write in this feature detection
+        //is.writeFeatures[feature] = is.features[feature];
+      
       complete(is.features[feature]);
       return;
     }
+    
+    if (isBuild) {
+      //add the feature detection to the build
+      require([feature], function(){});
+      //in build - return value isn't checked anyway
+      complete();
+      return;
+    }    
     
     require([feature], function(_feature) {
       if (_feature !== true && _feature !== false)
@@ -205,9 +213,22 @@ define(['module', 'require'], function(module, require) {
       }
       
       //check feature
-      is.lookup(f.feature, config, function(_feature) {
-        if ((_feature && f.type == 'load_if') || (!_feature && f.type == 'load_if_not'))
+      is.lookup(f.feature, config.isBuild, function(_feature) {
+        
+        if (config.isBuild) {
+          if (config.isExclude && config.isExclude.indexOf(f.feature) != -1) {
+            load(null);
+            return;
+          }
+          //by default, build the module in
           req([f.moduleId], load);
+          return;
+        }
+        
+        if ((_feature && f.type == 'load_if') || (!_feature && f.type == 'load_if_not')) {
+          //if doing a build, check if we are including the module or not
+          req([f.moduleId], load);
+        }
         else
           load(null);
       });
@@ -225,6 +246,13 @@ define(['module', 'require'], function(module, require) {
       });
     }
   }
+  
+  /* is.write = function(pluginName, moduleName, write) {
+    //write in the features 
+    for (var i = 0; i < is.writeFeatures.length; i++) {
+      
+    }
+  } */
   
   return is;
   
