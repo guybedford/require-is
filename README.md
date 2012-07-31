@@ -112,10 +112,16 @@ require(['is![mobile]', function(mobile) {
 Optimizer Configuration
 ---
 
-When running a build with the RequireJS Optimizer, the environment can be specified in exactly the same way. The environment
-state itself doesn't get built though. It just determines whether to build in the conditional modules or not.
+When running a build with the RequireJS Optimizer, the environment must be fully specified through the build configuration, as in (1) above.
 
-This way, one can do an inclusive 'desktop and mobile' build with the following config:
+Each condition must be set to `true` or `false` indicating whether to include those conditional modules in the build or not.
+
+By default, dynamic conditions defined as in (3) above will all be built in.
+
+In this way, the modules are all built in or not, and depending on the runtime conditions which can be entirely different to the build config,
+modules can be dynamically requested either remotely or from the build.
+
+For example, one can do an inclusive 'desktop and mobile' build with the following config:
 
 ```javascript
 config: {
@@ -125,8 +131,16 @@ config: {
 }
 ```
 
-This builds the mobile modules into the built layers. Then dependening on the environment configuration, these modules
+This builds the mobile modules into the built layers, as well as the mobile detection module, 'mobile.js'. Then dependening on the environment configuration, these modules
 will either get excluded or included as needed.
+
+To exclude the detection module, a separate build config can be specified of the form:
+
+```javascript
+{
+  isExcludeDetection: ['mobile', ...]
+}
+```
 
 ###Separate build layers
 
