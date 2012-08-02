@@ -46,7 +46,7 @@ Setting Conditions
 
 There are two ways to set conditions.
 
-## 1. Using the RequireJS configuration:
+### 1. Using the RequireJS configuration:
 
 ```javascript
 requirejs.config({
@@ -60,13 +60,13 @@ requirejs.config({
 
 Any number of conditions can be set to true or false in this way.
 
-## 2. With a detection script:
+### 2. With a detection script:
 
 When the `conditionId` is not found in the configuration, Require-IS loads the RequireJS module with moduleId, `conditionId`.
 
 This module should return `true` or `false` based on the feature condition.
 
-### Example:
+#### Example:
 
 To create our mobile condition, we would populate the file `mobile.js` in the base RequireJS folder:
 
@@ -85,7 +85,7 @@ When running a build, Require-IS will by default inline the condition detection 
 
 To get fine-grained control over this build process there are a number of options provided to allow full flexibility.
 
-## 1. Condition exclusions: isExclude
+### 1. Condition exclusions: isExclude
 
 You may wish to entirely exclude a specific condition case. For example, to exclude all the mobile scripts from the build, and then have them only loaded dynamically if needed.
 
@@ -93,7 +93,7 @@ This can be done with the build paramter - isExclude.
 
 isExclude is an array of conditionIds to exclude from the build layer. It can be applied for a single build layer or for the entire build config.
 
-### Example:
+#### Example:
 
 Require-JS build config:
 ```javascript
@@ -111,7 +111,7 @@ This will build `app` with all `is!mobile?moduleId` moduleIds excluded from the 
 
 To exclude the negation of mobile (from `is!~mobile?moduleId` OR `is!mobile?...:moduleId`), simply add `~mobile` to the `isExclude` array.
 
-## 2. Condition layers: isLayers
+### 2. Condition layers: isLayers
 
 This is all good and well, but if the mobile detection activiates, and we have many different mobile scripts, then we will end up with many separate dynamic requests to mobile modules, which goes against the point of having a build.
 
@@ -119,7 +119,7 @@ We thus create a feature layer with the use of the standard `exclude` and `inclu
 
 Additionally, Require-IS allows for specifying where to find this condition layer so that it will be dynamically included instead of having many different requests if the condition is needed.
 
-### Example:
+#### Example:
 ```javascript
 {
   modules: [
