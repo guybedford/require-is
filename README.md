@@ -3,11 +3,17 @@ Require-is
 
 A conditional loading plugin for [Require-JS](http://requirejs.org/) that works with optimizer builds and build layers.
 
-Use cases:
-* Provide a module on the server only, and exclude it on the client.
-* Provide a different build of a project for mobile.
-* Provide an entire build layer bringing together IE-specific JS across all modules, so that most users need not download these.
-* etc.!
+Very similar to the has module in Dojo, except fully compatible with the Require-JS optimizer.
+
+In this way, conditional code branches can be managed at a fine level by the Require-JS optimizer build process.
+
+Basic usage:
+
+```javascript
+define(['is!mobile?mobile-component:desktop-component'], function(component) {
+  //...
+});
+```
 
 Installation
 ---
@@ -19,13 +25,13 @@ volo add guybedford/require-is
 
 Alternaively, download is.js and place it in the baseUrl folder of a Require-JS project.
 
-Usage
+Syntax
 ---
 
 Where conditional loads are needed, use the RequireJS plugin syntax:
 
 ```
-is![conditionId]?[moduleId]
+is![conditionId]?[moduleId]:[moduleId]
 ```
 
 The negation form is also accepted:
@@ -34,24 +40,13 @@ The negation form is also accepted:
 is!~[conditionId]?[moduleId]
 ```
 
-### Example:
-
-```javascript
-define(['is!mobile?mobile-code'], function(mobileCode) {
-  
-});
-```
-
-If the condition, `[mobile]` is true, then the module `mobile-code` is loaded, otherwise `null` is returned.
-
-The above applies equally well to builds with the [RequireJS optimizer](http://requirejs.org/docs/optimization.html).
 
 Setting Conditions
 ---
 
-There are three ways to set conditions.
+There are two ways to set conditions.
 
-**1. Using the RequireJS configuration:**
+## 1. Using the RequireJS configuration:
 
 ```javascript
 requirejs.config({
@@ -65,105 +60,87 @@ requirejs.config({
 
 Any number of conditions can be set to true or false in this way.
 
-**2. Dynamically during runtime:**
+## 2. With a detection script:
 
-```javascript
-require(['is'], function(is) {
-  is.set('mobile');
-});
-```
+When the `featureId` is not found in the configuration, Require-IS loads the RequireJS module with moduleId, `featureId`.
 
-Any further loads will then use the condition.
+This module should return `true` or `false` based on the feature condition.
 
-**3. Most importantly, as a conditional checking module, located at featureId:**
+### Example:
 
-Eg:
-**In 'iphone.js':**
+To create our mobile condition, we would populate the file `mobile.js` in the base RequireJS folder:
+
+mobile.js:
 ```javascript
 define(function() {
-  if (typeof navigator === 'undefined' || typeof navigator.userAgent === 'undefined')
-    return false;
-  return navigator.userAgent.match(/iPhone/i);
+  return navigator.userAgent.match(/iPhone/);
 });
 ```
 
-**The condition will be checked in the above order. If none of the above return either 'true' or 'false', an error will be thrown.**
-
-**Note that conditions are constants. They can only be set once. As soon as a condition has been used in the loading of a module, it cannot be changed again and any attempts to set it will throw an error.**
-
-This is done in order that conditions can always be built into modules with the RequireJS optimizer.
-
-### Checking conditions
-
-Sometimes it may be useful to check the value of a condition as well.
-
-To do this, simply use the plugin with square brackets around the condition name.
-
-Example:
-
-```javascript
-require(['is![mobile]', function(mobile) {
-  if (mobile) {
-    //only true if mobile condition has been set
-  }
-});
-```
 
 Optimizer Configuration
 ---
 
-When running a build with the RequireJS Optimizer, the environment must be fully specified through the build configuration, as in (1) above.
+When running a build, Require-IS will by default inline the feature detection module, as well as all possible module variations loaded with Require-IS.
 
-Each condition must be set to `true` or `false` indicating whether to include those conditional modules in the build or not.
+To get fine-grained control over this build process there are a number of options provided to allow full flexibility.
 
-By default, dynamic conditions defined as in (3) above will all be built in.
+## 1. Feature exclusions: isExclude
 
-In this way, the modules are all built in or not, and depending on the runtime conditions which can be entirely different to the build config,
-modules can be dynamically requested either remotely or from the build.
+You may wish to entirely exclude a specific feature. For example, to exclude all the mobile scripts from the build, and then have them only loaded dynamically if needed.
 
-For example, one can do an inclusive 'desktop and mobile' build with the following config:
+This can be done with the build paramter - isExclude.
 
-```javascript
-config: {
-  is: {
-    mobile: true
-  }
-}
-```
+isExclude is an array of features to exclude from the build layer. It can be applied for a single build layer or for the entire build config.
 
-This builds the mobile modules into the built layers, as well as the mobile detection module, 'mobile.js'. Then dependening on the environment configuration, these modules
-will either get excluded or included as needed.
+### Example:
 
-To exclude the detection module, a separate build config can be specified of the form:
-
+Require-JS build config:
 ```javascript
 {
-  isExcludeDetection: ['mobile', ...]
+  modules: [
+  {
+    name: 'app',
+    isExclude: ['mobile']
+  }
+  ]
 }
 ```
 
-###Separate build layers
+This will build `app` with all `is!mobile?moduleId` moduleIds excluded from the build layer.
 
-To separate, say, all the mobile code into its own build layer, provide the following build configuration:
+To exclude the negation of mobile (from `is!~mobile?moduleId` OR `is!mobile?...:moduleId`), simply add `~mobile` to the `isExclude` array.
 
+## 2. Feature layers: isLayers
+
+This is all good and well, but if the mobile detection activiates, and we have many different mobile scripts, then we will end up with many dynamic requests, which goes against the point of having a build.
+
+We can create a feature layer with the use of the standard `exclude` and `include` options available for Require-JS builds.
+
+Additionally, Require-IS allows for specifying where to find this feature layer so that it will be dynamically included instead of having many different requests if the feature is needed.
+
+### Example:
 ```javascript
-config: {
-  is: {
-    mobile: false
-  }
-},
-modules: [
+{
+  modules: [
   {
-    name: 'main',
-    include: ['main', 'modules', 'here'],
-  },
-  {
-    name: 'mobile-only',
-    include: ['is!mobile*'],
-    exclude: ['main']
+    name: 'app',
+    isExclude: ['mobile'],
+    isLayers: {
+      mobile: 'app-mobile' //tell Require-IS to load 'app-mobile' if the mobile feature is positive
+    }
   }
-]
+  {
+    //define the 'app-mobile' layer
+    name: 'app-mobile',
+    create: true,
+    include: ['app'],
+    exclude: ['app']
+  }
+  ]
+}
 ```
 
-In this way, all the separate `is!mobile?mobile-script` requires called by all the previous modules, can be compiled into a single 'mobile' layer that when loaded
-results in no need to separately load the mobile modules from many resources.
+This example is included in the example folder of the project.
+
+In this way, flexible code branches can be managed.
