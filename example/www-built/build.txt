@@ -1,0 +1,14 @@
+
+app.js
+----------------
+require-is/is.api.js
+require-is/is.js
+mobile.js
+components/component-desktop.js
+require-is/is!mobile?components/component-mobile:components/component-desktop
+components/component.js
+app.js
+
+app-mobile.js
+----------------
+components/component-mobile.js

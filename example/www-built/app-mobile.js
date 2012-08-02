@@ -1,0 +1,1 @@
+define("components/component-mobile",{mobile:"version"})

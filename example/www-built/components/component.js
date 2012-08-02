@@ -1,0 +1,1 @@
+define(["is!mobile?./component-mobile:./component-desktop"],function(e){return e})
