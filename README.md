@@ -131,11 +131,11 @@ Additionally, Require-IS allows for specifying where to find this condition laye
     }
   }
   {
-    //define the 'app-mobile' layer
+    //define the 'app-mobile' layer to contain all the mobile scripts from 'app'
     name: 'app-mobile',
     create: true,
-    include: ['app'],
-    exclude: ['app']
+    include: ['app'], //fires the default inclusion of app, which includes all conditions (and mobile)
+    exclude: ['app'] //exclude uses the version of app as above, with the exclusions made, hence the difference between include and exclude is purely the mobile scripts!
   }
   ]
 }
