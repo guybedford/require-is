@@ -16,6 +16,10 @@ define([], function() {
     var actions = f.substr(feature.length + 1, f.length - feature.length - 1);
     
     var yesModuleId = actions.substr(0, actions.indexOf(':'));
+    
+    if (actions.substr(yesModuleId.length + 1, 2) == '//')
+      yesModuleId = actions.substr(0, actions.indexOf(':', yesModuleId.length + 1));
+    
     var noModuleId = actions.substr(yesModuleId.length + 1, actions.length - yesModuleId.length - 1);
     
     if (yesModuleId == '') {
