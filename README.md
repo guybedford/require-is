@@ -20,7 +20,7 @@ Installation
 
 Using [volo](https://github.com/volojs/volo):
 ```
-volo add guybedford/require-is
+volo add guybedford/is
 ```
 
 Alternaively, download is.js and place it in the baseUrl folder of a Require-JS project.
