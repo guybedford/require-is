@@ -6,19 +6,21 @@
     baseUrl: '.',
     map: {
       '*': {
-        'is': 'require-is/is'
+        'is': 'is/main'
       }
     },
     config: {
-      is: {
+      'is': {
+        browser: true
       }
     }
   });
 </script>
 
 <script>
-  require(['app'], function($) {
-    console.log($);
+  require(['app', 'is!browser'], function($, browser) {
+    if (browser)
+      console.log($);
   });
 </script>
 

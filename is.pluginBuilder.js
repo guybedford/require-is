@@ -36,12 +36,17 @@ define(['module', 'require', './is.api'], function(module, require, is) {
     
     var f = is.deconstruct(name);
     
+    //console.log(f);
+    
+    //console.log(is.features);
+    
     if (f.type == 'lookup')
       is.lookup(f.feature, load);
     
     if (f.type == 'load_if' || f.type == 'load_if_not') {
       //check feature
       is.lookup(f.feature, function(_feature) {
+        
         //check if it is in the config 'isExclude' list, and exclude accordingly
         var exclude = [];
 
