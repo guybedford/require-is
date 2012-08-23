@@ -1,5 +1,7 @@
 {
-    "volo": {
-        "type": "directory"
-    }
+  "main": "main",
+  "amd": {},
+  "volo": {
+    "type": "directory"
+  }
 }
