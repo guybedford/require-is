@@ -23,7 +23,17 @@ Using [volo](https://github.com/volojs/volo):
 volo add guybedford/is
 ```
 
-Alternaively, download is.js and place it in the baseUrl folder of a Require-JS project.
+Volo will automatically create the 'is' wrapper shortcut require form.
+
+If installing without Volo, download is and place it in the baseUrl folder of a Require-JS project and add the following configuration:
+
+```javascript
+  map: {
+    '*': {
+      'is': 'is/main'
+    }
+  }
+```
 
 Syntax
 ---
