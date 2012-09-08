@@ -4,7 +4,7 @@
   baseUrl: '.',
   map: {
     '*': {
-      'is': 'require-is/is'
+      'is': 'is/is'
     }
   },
   fileExclusionRegExp: /(^example)|(.git)$/,
