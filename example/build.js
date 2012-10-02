@@ -2,12 +2,12 @@
   appDir: 'www',
   dir: 'www-built',
   baseUrl: '.',
+  fileExclusionRegExp: /(^example)|(.git)$/,
   map: {
     '*': {
-      'is': 'is/is'
+      is: 'require-is/is'
     }
   },
-  fileExclusionRegExp: /(^example)|(.git)$/,
   modules: [
     {
       name: 'app',

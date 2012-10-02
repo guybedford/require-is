@@ -1,5 +1,5 @@
-define(['module', 'require', './is.api'], function(module, require, is) {
-  
+define(['module', 'require', './is-api'], function(module, require, api) {
+  is = {};
   is.features = module.config() || {};
   
   //module layer list reference
@@ -18,6 +18,7 @@ define(['module', 'require', './is.api'], function(module, require, is) {
     return;
   }
   
+  is.normalize = api.normalize;  
   is.load = function(name, req, load, config) {
     
     //if the first load - save the modules reference
@@ -34,7 +35,7 @@ define(['module', 'require', './is.api'], function(module, require, is) {
       }
     }
     
-    var f = is.deconstruct(name);
+    var f = api.parse(name);
     
     //console.log(f);
     

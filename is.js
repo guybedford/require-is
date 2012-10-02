@@ -77,10 +77,11 @@
  *
  */
 
-define(['module', 'require', './is.api'], function(module, require, is) {
+define(['module', 'require', './is-api'], function(module, require, api) {
+  is = {};
+  is.pluginBuilder = './is-builder';
   
-  is.pluginBuilder = './is.pluginBuilder';
-  
+  is.normalize = api.normalize;
   is.features = module.config() || {};
   
   //build tracking
@@ -191,7 +192,7 @@ define(['module', 'require', './is.api'], function(module, require, is) {
   }
   
   is.load = function(name, req, load, config) {
-    var f = is.deconstruct(name);
+    var f = api.parse(name);
     
     //console.log(f);
     

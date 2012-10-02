@@ -1,1 +1,0 @@
-define([],function(){return Math.random()>.5})

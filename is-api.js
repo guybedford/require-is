@@ -1,7 +1,25 @@
-define([], function() {
-  
-  var is = {};
-  
+define(function() {
+  var api = {};
+
+  api.normalize = function(name, normalize) {
+    var f = api.parse(name);
+    f.feature = normalize(f.feature);
+
+    if (f.yesModuleId)
+      f.yesModuleId = normalize(f.yesModuleId);
+    if (f.noModuleId)
+      f.noModuleId = normalize(f.noModuleId);
+    
+    //reconstruct
+    if (f.type == 'lookup')
+      return f.feature;
+    
+    if (f.type == 'load_if_not')
+      return '~' + f.feature + '?' + f.yesModuleId + (f.noModuleId ? ':' + f.noModuleId : '');
+    
+    if (f.type == 'load_if')
+      return f.feature + '?' + f.yesModuleId + (f.noModuleId ? ':' + f.noModuleId : '');
+  }
   /*
    * Breakdown 'is' call into an object:
    * {
@@ -11,7 +29,7 @@ define([], function() {
    *   noModuleId: 'moduleId'
    * }
    */
-  is.deconstruct = function(f) {      
+  api.parse = function(f) {      
     var feature = f.substr(0, f.indexOf('?'));
     var actions = f.substr(feature.length + 1, f.length - feature.length - 1);
     
@@ -51,27 +69,5 @@ define([], function() {
         noModuleId: noModuleId
       };
   }
-  
-  is.normalize = function(name, normalize) {
-    var f = is.deconstruct(name);
-    f.feature = normalize(f.feature);
-
-    if (f.yesModuleId)
-      f.yesModuleId = normalize(f.yesModuleId);
-    if (f.noModuleId)
-      f.noModuleId = normalize(f.noModuleId);
-    
-    //reconstruct
-    if (f.type == 'lookup')
-      return f.feature;
-    
-    if (f.type == 'load_if_not')
-      return '~' + f.feature + '?' + f.yesModuleId + (f.noModuleId ? ':' + f.noModuleId : '');
-    
-    if (f.type == 'load_if')
-      return f.feature + '?' + f.yesModuleId + (f.noModuleId ? ':' + f.noModuleId : '');
-  }
-
-  return is;
-  
+  return api;
 });
