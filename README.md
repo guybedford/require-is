@@ -138,7 +138,7 @@ Additionally, Require-IS allows for specifying where to find this condition laye
     isLayers: {
       mobile: 'app-mobile' //tell Require-IS to load 'app-mobile' if the mobile condition is positive
     }
-  }
+  },
   {
     //define the 'app-mobile' layer to contain all the mobile scripts from 'app'
     name: 'app-mobile',
