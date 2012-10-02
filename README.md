@@ -18,19 +18,18 @@ define(['is!mobile?mobile-component:desktop-component'], function(component) {
 Installation
 ---
 
-Using [volo](https://github.com/volojs/volo):
+Download `require-is` into its own folder either manually or using [volo](https://github.com/volojs/volo):
+
 ```
-volo add guybedford/is
+volo add guybedford/require-is
 ```
 
-Volo will automatically create the 'is' wrapper shortcut require form.
-
-If installing without Volo, download is and place it in the baseUrl folder of a Require-JS project and add the following configuration:
+Add the following map configuration for ease of use:
 
 ```javascript
   map: {
     '*': {
-      'is': 'is/main'
+      'is': 'require-is/is'
     }
   }
 ```
@@ -61,7 +60,7 @@ There are two ways to set conditions.
 ```javascript
 requirejs.config({
   config: {
-    is: {
+    'require-is/is': {
       mobile: true
     }
   }
