@@ -90,6 +90,31 @@ define(function() {
 
 By default, require-is defines the `browser` condition automatically, and will automatically exclude any scripts loaded on the `~browser` condition from the build. This allows for easy management of code branches sharing client and server code allowing for a single codebase between client and server.
 
+
+### Multiple conditions:
+
+Multiple conditions can be handled in two ways:
+
+##### 1) Nested 'is' calls:
+
+```javascript
+  define(['is!ios?ios-code:is!android?android-code'], function(mobileCode) {
+  });
+```
+
+This can become difficult to read, and there is no bracket notation supported for operation ordering. Calls are simply run from left to right.
+
+##### 2) Multiple 'is' calls:
+
+```javascript
+  define(['is!ios?ios-code', 'is!android?android-code', 'is!blackberry?blackberry-code'], function(ios, android, blackberry) {
+    var mobileCode = ios || android || blackberry;
+  });
+```
+
+When no alternative load is give, is returns a `null` module, so that the above conditional checks will return the only defined module in the group.
+
+
 Optimizer Configuration
 ---
 
