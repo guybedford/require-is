@@ -2,6 +2,8 @@ define(['module', 'require', './is-api'], function(module, require, api) {
   is = {};
   is.features = module.config() || {};
   
+  is.features.browser = false;
+  
   //module layer list reference
   is.modules = null;
   
@@ -20,7 +22,6 @@ define(['module', 'require', './is-api'], function(module, require, api) {
   
   is.normalize = api.normalize;  
   is.load = function(name, req, load, config) {
-    
     //if the first load - save the modules reference
     if (!is.config) {
       is.config = config;
@@ -47,9 +48,8 @@ define(['module', 'require', './is-api'], function(module, require, api) {
     if (f.type == 'load_if' || f.type == 'load_if_not') {
       //check feature
       is.lookup(f.feature, function(_feature) {
-        
         //check if it is in the config 'isExclude' list, and exclude accordingly
-        var exclude = [];
+        var exclude = ['~browser'];
 
         if (is.config.isExclude)
           exclude = exclude.concat(is.config.isExclude);
@@ -68,6 +68,18 @@ define(['module', 'require', './is-api'], function(module, require, api) {
             f.noModuleId = null;
           else
             f.yesModuleId = null;
+            
+        //also exclude modules starting with '$', allowing for server path aliases of the form $app/, $module/ etc.
+        if (f.yesModuleId && f.yesModuleId.substr(0, 1) == '$')
+          f.yesModuleId = null;
+        if (f.noModuleId && f.noModuleId.substr(0, 1) == '$')
+          f.noModuleId = null;
+        
+        //if an external url, null out as well
+        //if (f.yesModuleId.match(/https?:\/\//))
+        //  f.yesModuleId = null;
+        //if (f.noModuleId.match(/https?:\/\//))
+        //  f.noModuleId = null;
         
         //require (if not nulled out)
         req([f.yesModuleId, f.noModuleId], load);

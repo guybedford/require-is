@@ -1,3 +1,3 @@
-define(['components/component'], function(com) {
+define(['is!browser?components/component', 'is!~mobile?nomobile'], function(com) {
   return com;
 });

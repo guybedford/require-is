@@ -84,6 +84,10 @@ define(['module', 'require', './is-api'], function(module, require, api) {
   is.normalize = api.normalize;
   is.features = module.config() || {};
   
+  //add 'browser' feature
+  if (is.features.browser === undefined)
+    is.features.browser = (typeof window != 'undefined');
+  
   //build tracking
   is.curModule = null;
   is.modules = null;

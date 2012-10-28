@@ -86,6 +86,7 @@ define(function() {
 });
 ```
 
+__By default, require-is defines the *browser* condition automatically, and will automatically exclude any scripts loaded on the `~browser` condition from the build. This allows for easy management of code branches sharing client and server code allowing for a single codebase between client and server.__
 
 Optimizer Configuration
 ---
