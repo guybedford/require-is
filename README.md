@@ -114,6 +114,24 @@ This can become difficult to read, and there is no bracket notation supported fo
 
 When no alternative load is give, is returns a `null` module, so that the above conditional checks will return the only defined module in the group.
 
+Polyfills
+---
+
+Require-IS provides a nice natural polyfill system.
+
+A feature detection module can be run, and the required polyfill only downloaded if the feature detection fails.
+
+This allows modules to be created that are minimal in builds, excluding the polyfill module but only including the feature detection module.
+
+Implementations for some simple polyfills are provided below:
+
+### Polyfill Implementations
+
+* [selector](https://github.com/guybedford/selector)
+  Performs native querySelector testing, downloading sizzle dynamically only if necessary. Otherwise it returns the native selector. Also compatible with jQuery. Allows modules to only be dependent on a small selector feature detection.
+* [json](https://github.com/guybedford/json)
+  Checks for JSON.parse support, and if not provided downloads json2 by Douglas Crockford.
+
 
 Optimizer Configuration
 ---
@@ -181,3 +199,20 @@ Additionally, Require-IS allows for specifying where to find this condition laye
 This example is included in the example folder of the project.
 
 In this way, flexible code branches can be managed.
+
+3. Default build exclusion
+
+  For polyfill modules, typically one wants the modules excluded from the build by default, without having to add the isExclude property.
+
+  For this purpose, a require can be made of the form:
+
+  ```
+    define(['is!~feature-test?[polyfill]'], function(feature) {
+      feature  = feature || nativeSupport();
+
+      // use feature
+    });
+  ```
+  
+  The `[moduleId]` form of loading implies that the polyfill is by default excluded from the build.
+

@@ -14,6 +14,11 @@ define(function() {
     if (f.type == 'lookup')
       return f.feature;
     
+    if (!f.yesBuild)
+      f.yesModuleId = '[' + f.yesModuleId + ']';
+    if (!f.noBuild)
+      f.noModuleId = '[' + f.noModuleId + ']';
+    
     if (f.type == 'load_if_not')
       return '~' + f.feature + '?' + f.yesModuleId + (f.noModuleId ? ':' + f.noModuleId : '');
     
@@ -27,6 +32,8 @@ define(function() {
    *   type: 'load_if' / 'load_if_not' / 'lookup'
    *   yesModuleId: 'moduleId'
    *   noModuleId: 'moduleId'
+   *   yesBuild: true / false
+   *   noBuild: true / false
    * }
    */
   api.parse = function(f) {      
@@ -45,6 +52,18 @@ define(function() {
       noModuleId = null;
     }
     
+    var yesBuild = true;
+    var noBuild = true;
+    if (yesModuleId && yesModuleId.substr(0, 1) == '[' && yesModuleId.substr(yesModuleId.length - 1, 1) == ']') {
+      yesModuleId = yesModuleId.substr(1, yesModuleId.length - 2);
+      yesBuild = false;
+    }
+    if (noModuleId && noModuleId.substr(0, 1) == '[' && noModuleId.substr(noModuleId.length - 1, 1) == ']') {
+      noModuleId = noModuleId.substr(1, noModuleId.length - 2);
+      noBuild = false;
+    }
+      
+    
     //is!feature
     if (feature == '')
       return {
@@ -58,7 +77,9 @@ define(function() {
         feature: feature.substr(1, f.length - 1),
         type: 'load_if_not',
         yesModuleId: yesModuleId,
-        noModuleId: noModuleId
+        noModuleId: noModuleId,
+        yesBuild: yesBuild,
+        noBuild: noBuild
       };
     //is!~feature?moduleId
     else
@@ -66,7 +87,9 @@ define(function() {
         feature: feature,
         type: 'load_if',
         yesModuleId: yesModuleId,
-        noModuleId: noModuleId
+        noModuleId: noModuleId,
+        yesBuild: yesBuild,
+        noBuild: noBuild
       };
   }
   return api;

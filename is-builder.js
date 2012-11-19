@@ -68,11 +68,11 @@ define(['module', 'require', './is-api'], function(module, require, api) {
             f.noModuleId = null;
           else
             f.yesModuleId = null;
-            
-        //also exclude modules starting with '$', allowing for server path aliases of the form $app/, $module/ etc.
-        if (f.yesModuleId && f.yesModuleId.substr(0, 1) == '$')
+        
+        if (!f.yesBuild)
           f.yesModuleId = null;
-        if (f.noModuleId && f.noModuleId.substr(0, 1) == '$')
+          
+        if (!f.noBuild)
           f.noModuleId = null;
         
         //if an external url, null out as well
