@@ -138,9 +138,9 @@ Optimizer Configuration
 
 When running a build, Require-IS will by default inline the condition detection module, as well as all possible module variations loaded with Require-IS.
 
-To get fine-grained control over this build process there are a number of options provided to allow full flexibility.
+To get fine-grained control over this build process use the `isExclude` array option.
 
-### 1. Condition exclusions: isExclude
+### Condition exclusions: isExclude
 
 You may wish to entirely exclude a specific condition case. For example, to exclude all the mobile scripts from the build, and then have them only loaded dynamically if needed.
 
@@ -166,13 +166,14 @@ This will build `app` with all `is!mobile?moduleId` moduleIds excluded from the 
 
 To exclude the negation of mobile (from `is!~mobile?moduleId` OR `is!mobile?...:moduleId`), simply add `~mobile` to the `isExclude` array.
 
-### 2. Condition layers: isLayers
+### Layered Loading
 
 This is all good and well, but if the mobile detection activiates, and we have many different mobile scripts, then we will end up with many separate dynamic requests to mobile modules, which goes against the point of having a build.
 
-We thus create a feature layer with the use of the standard `exclude` and `include` options available for Require-JS builds.
+To ensure that the mobile scripts are loaded from the correct layer, create a `paths` configuration in the production configuration to
+point all the mobile moduleIds to the mobile layer moduleId.
 
-Additionally, Require-IS allows for specifying where to find this condition layer so that it will be dynamically included instead of having many different requests if the condition is needed.
+Typically this is a standard post-processing operation done for all builds to allow optimal layer loading.
 
 #### Example:
 ```javascript
@@ -181,9 +182,6 @@ Additionally, Require-IS allows for specifying where to find this condition laye
   {
     name: 'app',
     isExclude: ['mobile'],
-    isLayers: {
-      mobile: 'app-mobile' //tell Require-IS to load 'app-mobile' if the mobile condition is positive
-    }
   },
   {
     //define the 'app-mobile' layer to contain all the mobile scripts from 'app'
@@ -193,6 +191,16 @@ Additionally, Require-IS allows for specifying where to find this condition laye
     exclude: ['app'] //exclude uses the version of app as above, with the exclusions made, hence the difference between include and exclude is purely the mobile scripts!
   }
   ]
+}
+```
+
+With production config:
+```javascript
+{
+  paths: {
+    'mobile-dependency-1': 'app-mobile',
+    'mobile-dependency-2': 'app-mobile'
+  }
 }
 ```
 

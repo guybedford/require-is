@@ -38,10 +38,6 @@ define(['module', 'require', './is-api'], function(module, require, api) {
     
     var f = api.parse(name);
     
-    //console.log(f);
-    
-    //console.log(is.features);
-    
     if (f.type == 'lookup')
       is.lookup(f.feature, load);
     
@@ -85,42 +81,6 @@ define(['module', 'require', './is-api'], function(module, require, api) {
         req([f.yesModuleId, f.noModuleId], load);
       });
     }
-  }
-  
-  is.write = function(pluginName, moduleName, write) {
-    if (!is.writtenFeatureLayers) {
-   
-      //build up layers from global and module config
-      var isLayers = {};
-      
-      if (is.config.isLayers) {
-        for (var layer in is.config.isLayers)
-          if (is.features[layer]) //filter layers to features used by this module
-            isLayers[layer] = is.config.isLayers[layer];
-      }
-      
-      if (is.curModule && is.curModule.isLayers) {
-        for (var layer in is.curModule.isLayers) {
-          if (is.features[layer]) //filter layers to features used by this module
-            isLayers[layer] = is.curModule.isLayers[layer];
-        }
-      }
-      
-      //finally write in the auto-loading of feature layers adding the loaders as feature hook callbacks
-      var output = "";
-      for (var layer in isLayers) {
-        if (!output)
-          output = "require(['" + pluginName + "'], function(is){ \n";
-        output += "is.on('" + layer + "', function(complete) { require(['" + isLayers[layer] + "'], complete); }); \n";
-      }
-      if (output) {
-        output += "});";
-        write(output);
-      }
-      
-    }
-    else
-      is.writtenFeatureLayers = true;
   }
   
   return is;
