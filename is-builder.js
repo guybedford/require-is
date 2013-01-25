@@ -3,6 +3,7 @@ define(['module', 'require', './is-api'], function(module, require, api) {
   is.features = module.config() || {};
   
   is.features.browser = false;
+  is.features.build = true;
   
   //module layer list reference
   is.modules = null;

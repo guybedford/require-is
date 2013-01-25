@@ -79,6 +79,8 @@ define(['module', 'require', './is-api'], function(module, require, api) {
   //add 'browser' feature
   if (is.features.browser === undefined)
     is.features.browser = (typeof window != 'undefined');
+  if (is.features.build === undefined) 
+    is.features.build = false;
   
   //build tracking
   is.curModule = null;
