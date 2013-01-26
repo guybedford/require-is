@@ -1,5 +1,5 @@
 define(['module', 'require', './is-api'], function(module, require, api) {
-  is = {};
+  var is = {};
   is.features = module.config() || {};
   
   is.features.browser = false;
@@ -15,7 +15,6 @@ define(['module', 'require', './is-api'], function(module, require, api) {
       return;
     }
     
-    is.features[feature] = true;
     require([feature]);
     complete();
     return;
@@ -38,7 +37,7 @@ define(['module', 'require', './is-api'], function(module, require, api) {
     }
     
     var f = api.parse(name);
-    
+
     if (f.type == 'lookup')
       is.lookup(f.feature, load);
     
