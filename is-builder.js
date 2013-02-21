@@ -1,4 +1,4 @@
-define(['module', 'require', './is-api'], function(module, require, api) {
+define(['module', './is-api'], function(module, api) {
   var is = {};
   is.features = module.config() || {};
   
@@ -78,7 +78,7 @@ define(['module', 'require', './is-api'], function(module, require, api) {
         //  f.noModuleId = null;
         
         //require (if not nulled out)
-        req([f.yesModuleId, f.noModuleId], load);
+        require([f.yesModuleId, f.noModuleId], load);
       });
     }
   }
