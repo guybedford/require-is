@@ -78,7 +78,7 @@ define(['module', './is-api'], function(module, api) {
         //  f.noModuleId = null;
         
         //require (if not nulled out)
-        require([f.yesModuleId, f.noModuleId], load);
+        req([f.yesModuleId, f.noModuleId], load);
       });
     }
   }
