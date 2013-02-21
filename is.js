@@ -69,7 +69,7 @@
  *
  */
 
-define(['module', 'require', './is-api'], function(module, require, api) {
+define(['module', './is-api'], function(module, api) {
   is = {};
   is.pluginBuilder = './is-builder';
   
@@ -117,10 +117,10 @@ define(['module', 'require', './is-api'], function(module, require, api) {
       is.lookup(f.feature, function(_feature) {
         if ((_feature && f.type == 'load_if') || (!_feature && f.type == 'load_if_not'))
           //if doing a build, check if we are including the module or not
-          req([f.yesModuleId], load);
+          require([f.yesModuleId], load);
 
         else if ((!_feature && f.type == 'load_if' && f.noModuleId) || (_feature && f.type == 'load_if_not' && f.noModuleId))
-          req([f.noModuleId], load);
+          require([f.noModuleId], load);
           
         else
           load(is.empty());
