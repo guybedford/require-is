@@ -1,12 +1,7 @@
 define(function() {
   var api = {};
 
-  // temp double normalization fix
-  var normalizeCnt = 0;
   api.normalize = function(name, normalize) {
-    if (normalizeCnt++ % 2 == 1)
-      return name;
-
     var f = api.parse(name);
     f.feature = normalize(f.feature);
 
