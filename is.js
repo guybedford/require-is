@@ -69,7 +69,7 @@
  *
  */
 
-define(['module', './is-api'], function(module, api) {
+define(['module', './is-api', 'require'], function(module, api, require) {
   is = {};
   is.pluginBuilder = './is-builder';
   
