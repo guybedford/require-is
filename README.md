@@ -1,6 +1,8 @@
 Require-is
 ===
 
+__No longer compatible with the r.js optimizer due to recent changes.__
+
 A conditional loading plugin for [Require-JS](http://requirejs.org/) that works with optimizer builds and build layers.
 
 Very similar to the has module in Dojo, except fully compatible with the Require-JS optimizer.
